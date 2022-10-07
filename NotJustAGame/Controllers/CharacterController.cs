@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NotJustAGame.Service;
 
 namespace NotJustAGame.Controllers
 {
@@ -6,30 +7,38 @@ namespace NotJustAGame.Controllers
     [ApiController]
     public class CharacterController : ControllerBase
     {
-
+        private readonly ICharacterService _characterService;
         /*private readonly ILogger<CharacterController> _logger;
 
         public CharacterController(ILogger<CharacterController> logger)
         {
             _logger = logger;
         }*/
-        private static List<Character> characters = new List<Character>()
+        public CharacterController(ICharacterService characterService)
         {
-            new Character{  Id=1                  },
-            new Character{  Id=2, Name = "Dipesh" },
-            new Character{  Id=3, Name = "Simran" },
-        };
+            _characterService = characterService;
+        }
 
         [HttpGet]
-        public ActionResult<List<Character>> Get()
+        public async Task<ActionResult<SystemResponse<List<Character>>>> Get()
         {
-            return Ok(characters);
-        }
-        [HttpGet("{Id}")]
-        public ActionResult<List<Character>> GetById(int Id)
-        {
-            var result = characters.FindAll(x => x.Id == Id).ToList();
+            var result = await _characterService.GetAllCharacters();
             return Ok(result);
         }
+
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<SystemResponse<Character>>> GetById(int Id)
+        {
+            var result = await _characterService.GetCharacter(Id);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<SystemResponse<List<Character>>>> Create(Character newCharacter)
+        {
+            var result = await _characterService.AddCharacter(newCharacter);
+            return Ok(result);
+        }
+
     }
 }

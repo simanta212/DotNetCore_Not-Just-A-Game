@@ -1,4 +1,5 @@
 global using NotJustAGame.Models;
+using NotJustAGame.Service;
 using Serilog;
 using Serilog.Events;
 
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMvc();
 builder.Host.UseSerilog();
+builder.Services.AddScoped<ICharacterService, CharacterService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
