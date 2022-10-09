@@ -1,4 +1,4 @@
-﻿namespace NotJustAGame.ModelDTOs.Characters
+﻿namespace NotJustAGame.Models.DTOs.Characters
 {
     public class CharacterDto
     {

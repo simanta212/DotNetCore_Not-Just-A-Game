@@ -1,10 +1,12 @@
-﻿namespace NotJustAGame.Service
+﻿using NotJustAGame.Models.DTOs.Characters;
+
+namespace NotJustAGame.Service
 {
     public interface ICharacterService
     {
-        Task<SystemResponse<List<Character>>> GetAllCharacters();
-        Task<SystemResponse<Character>> GetCharacter(int id);
-        Task<SystemResponse<List<Character>>> AddCharacter(Character newCharacter);
+        Task<SystemResponse<List<CharacterDto>>> GetAllCharacters();
+        Task<SystemResponse<CharacterDto>> GetCharacter(int id);
+        Task<SystemResponse<List<CharacterDto>>> AddCharacter(CreateCharacterDto newCharacter);
 
     }
 }

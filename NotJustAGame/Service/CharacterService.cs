@@ -1,4 +1,8 @@
-﻿namespace NotJustAGame.Service
+﻿using AutoMapper;
+using NotJustAGame.Models.DTOs.Characters;
+
+namespace NotJustAGame.Service
+
 {
     public class CharacterService : ICharacterService
     {
@@ -8,25 +12,41 @@
             new Character{  Id=2, Name = "Dipesh" },
             new Character{  Id=3, Name = "COCO" },
         };
-        public async Task<SystemResponse<List<Character>>> AddCharacter(Character newCharacter)
+
+        private readonly IMapper _mapper;
+
+        public CharacterService(IMapper mapper)
         {
-            var systemResponse = new SystemResponse<List<Character>>();
-            characters.Add(newCharacter);
-            systemResponse.Data = characters;
+            _mapper = mapper;
+        }
+        public async Task<SystemResponse<List<CharacterDto>>> AddCharacter(CreateCharacterDto newCharacter)
+        {
+            var systemResponse = new SystemResponse<List<CharacterDto>>();
+            /*int count = characters.Count() - 1;
+            int id = characters[count].Id + 1;
+            newCharacter.Id = id;*/  
+            //OR
+            newCharacter.Id = characters.Max(x => x.Id + 1);
+            //
+            characters.Add(_mapper.Map<Character> (newCharacter));
+            //way1
+            systemResponse.Data = characters.Select(x => _mapper.Map<CharacterDto>(x)).ToList();
             return systemResponse;
         }
 
-        public async Task<SystemResponse<List<Character>>> GetAllCharacters()
+        public async Task<SystemResponse<List<CharacterDto>>> GetAllCharacters()
         {
-            var systemResponse = new SystemResponse<List<Character>>();
-            systemResponse.Data = characters;
+            var systemResponse = new SystemResponse<List<CharacterDto>>();
+            systemResponse.Data = characters.Select(x => _mapper.Map<CharacterDto>(x)).ToList();
             return systemResponse;
         }
 
-        public async Task<SystemResponse<Character>> GetCharacter(int Id)
+        public async Task<SystemResponse<CharacterDto>> GetCharacter(int Id)
         {
-            var systemResponse = new SystemResponse<Character>();
-            systemResponse.Data = characters.Find(x => x.Id == Id);
+            var systemResponse = new SystemResponse<CharacterDto>();
+            var result = characters.Find(x => x.Id == Id);
+            //way2
+            systemResponse.Data = _mapper.Map<CharacterDto>(result);
             return systemResponse;
         }
     }
